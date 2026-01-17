@@ -40,20 +40,6 @@ export class ActiveFilters extends BaseElement {
         return (await this.getActiveFilterCount()) > 0;
     }
 
-    getFilterByLabel(label: string): Locator {
-        return this.filterItems.filter({
-            has: this.page.locator('.active-filter-label', { hasText: label })
-        });
-    }
-
-    async removeFilterByLabel(label: string): Promise<void> {
-        const filterItem = this.getFilterByLabel(label);
-        await filterItem.locator('a.active-filter-link').click();
-        
-        // Wait for the filter to be removed
-        await expect(filterItem, `Filter "${label}" should be removed`).not.toBeVisible();
-    }
-
     async removeAllFilters(): Promise<void> {
         await this.removeAllFiltersButton.click();
         

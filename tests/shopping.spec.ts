@@ -4,7 +4,7 @@ import {  expect } from '@playwright/test';
 import { test } from '../fixtures';
 import AxeBuilder from "@axe-core/playwright";
 
-describe('amazon', () => {
+describe('Sports section tests', () => {
     test.beforeEach(async ({ landingPage }) => {
         await landingPage.navigate();
     });

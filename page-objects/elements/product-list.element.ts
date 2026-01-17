@@ -60,13 +60,7 @@ export class ProductList extends BaseElement {
         const productElement = this.productArticles.filter({
             has: this.page.locator('.art-name').filter({ hasText: productName })
         });
-        return new Product(this.page, productElement);
-    }
-
-    getAllProducts(): Promise<Product[]> {
-        return this.productArticles.all().then(elements => 
-            elements.map(element => new Product(this.page, element))
-        );
+        return new Product(productElement);
     }
 
     async sortBy(sortOption: SortOption): Promise<void> {
@@ -87,9 +81,8 @@ export class ProductList extends BaseElement {
  */
 export class Product extends BaseElement {
 
-    constructor(page: Page, productLocator: Locator) {
-        super(page, '');
-        //this.root = productLocator;
+    constructor(productLocator: Locator) {
+        super(productLocator);
     }
 
     // Product elements
