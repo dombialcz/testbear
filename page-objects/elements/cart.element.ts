@@ -48,6 +48,11 @@ export class Cart extends BaseElement {
         return new CartItem(itemLocator);
     }
 
+    getCartItemByIndex(index: number): CartItem {
+        const itemLocator = this.cartItemElements.nth(index);
+        return new CartItem(itemLocator);
+    }
+
     /**
      * Remove a specific item from the cart by product name
      */
@@ -108,6 +113,7 @@ export class Cart extends BaseElement {
      */
     async goToCart(): Promise<void> {
         await this.goToCartButton.click();
+        await this.page.waitForURL('**/cart');
     }
 
     /**

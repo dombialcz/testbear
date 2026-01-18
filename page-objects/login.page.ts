@@ -50,6 +50,7 @@ export class LoginPage extends BasePage {
     async login(usernameOrEmail: string, password: string, rememberMe: boolean = false): Promise<void> {
         await this.fillLoginForm(usernameOrEmail, password, rememberMe);
         await this.loginButton.click();
+        await this.page.waitForLoadState('networkidle');
     }
 
     /**
@@ -87,14 +88,6 @@ export class LoginPage extends BasePage {
     async assertValidationErrorContains(expectedText: string): Promise<void> {
         await expect(this.validationSummary, 'Validation error should be visible').toBeVisible();
         await expect(this.validationErrorMessage, `Expected error to contain: ${expectedText}`).toContainText(expectedText);
-    }
-
-    /**
-     * Assert that the login page is displayed
-     */
-    async assertLoginPageDisplayed(): Promise<void> {
-        await expect(this.pageTitle, 'Login page title should be visible').toBeVisible();
-        await expect(this.loginButton, 'Login button should be visible').toBeVisible();
     }
 
     /**

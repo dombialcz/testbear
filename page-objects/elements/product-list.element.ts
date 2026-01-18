@@ -29,6 +29,11 @@ export class ProductList extends BaseElement {
     readonly listViewButton = this.root.locator('.artlist-action--viewmode a[href*="v=list"]');
 
     // Helper methods
+    async getNthProduct(n: number): Promise<Product> {
+        const productElement = this.productArticles.nth(n);
+        return new Product(productElement);
+    }
+
     async getItemCount(): Promise<{ displayed: number; total: number }> {
         const countText = await this.itemCountElement.textContent();
         if (!countText) {
@@ -50,10 +55,6 @@ export class ProductList extends BaseElement {
     async assertItemCount(expectedTotal: number, message?: string): Promise<void> {
         const count = await this.getItemCount();
         await expect(count.total, message || `Expected ${expectedTotal} items`).toBe(expectedTotal);
-    }
-
-    async getVisibleProductCount(): Promise<number> {
-        return await this.productArticles.count();
     }
 
     getProductByName(productName: string): Product {
@@ -107,6 +108,10 @@ export class Product extends BaseElement {
     readonly viewDetailsButton = this.root.locator('.art-btn-group a[href]:not([data-type])').last();
 
     // Helper methods
+    async select(): Promise<void> {
+        await this.root.hover();
+    }
+
     async getName(): Promise<string> {
         return (await this.productName.textContent()) || '';
     }

@@ -161,23 +161,6 @@ export class CartPage extends BasePage {
         }
         return parseFloat(match[1]);
     }
-
-    /**
-     * Assert subtotal matches expected value
-     */
-    async assertSubtotal(expectedValue: string, message?: string): Promise<void> {
-        const actual = await this.getSubtotal();
-        expect(actual, message || `Expected subtotal to be ${expectedValue}`).toContain(expectedValue);
-    }
-
-    /**
-     * Assert total matches expected value
-     */
-    async assertTotal(expectedValue: string, message?: string): Promise<void> {
-        const actual = await this.getTotal();
-        expect(actual, message || `Expected total to be ${expectedValue}`).toContain(expectedValue);
-    }
-
     /**
      * Apply discount code
      */
@@ -218,6 +201,21 @@ export class CartPage extends BasePage {
      */
     async proceedToCheckout(): Promise<void> {
         await this.checkoutButton.click();
+        await this.page.waitForURL('**/login**');
+    }
+
+    /**
+     * Clear all items from the cart
+     */
+    async clearAllItems(): Promise<void> {
+        let itemCount = await this.getCartItemCount();
+        
+        while (itemCount > 0) {
+            const item = this.getCartItemByIndex(0);
+            await item.remove();
+            await this.loader.waitForLoad();
+            itemCount = await this.getCartItemCount();
+        }
     }
 }
 
@@ -358,35 +356,5 @@ export class CartPageItem extends BaseElement {
      */
     async viewProductDetails(): Promise<void> {
         await this.productLink.click();
-    }
-
-    /**
-     * Assert product name matches expected value
-     */
-    async assertName(expectedName: string, message?: string): Promise<void> {
-        await expect(this.productName, message || `Expected product name to be ${expectedName}`).toHaveText(expectedName);
-    }
-
-    /**
-     * Assert unit price contains expected value
-     */
-    async assertUnitPrice(expectedPrice: string, message?: string): Promise<void> {
-        const actual = await this.getUnitPrice();
-        expect(actual, message || `Expected unit price to contain ${expectedPrice}`).toContain(expectedPrice);
-    }
-
-    /**
-     * Assert quantity matches expected value
-     */
-    async assertQuantity(expectedQuantity: number, message?: string): Promise<void> {
-        await expect(this.quantityInput, message || `Expected quantity to be ${expectedQuantity}`).toHaveValue(expectedQuantity.toString());
-    }
-
-    /**
-     * Assert subtotal contains expected value
-     */
-    async assertSubtotal(expectedSubtotal: string, message?: string): Promise<void> {
-        const actual = await this.getSubtotal();
-        expect(actual, message || `Expected subtotal to contain ${expectedSubtotal}`).toContain(expectedSubtotal);
     }
 }
