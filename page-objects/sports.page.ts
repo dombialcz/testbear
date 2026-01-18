@@ -3,6 +3,7 @@ import { BasePage } from './base.page';
 import { Filter } from './elements/filter.element';
 import { ProductList } from './elements/product-list.element';
 import { ActiveFilters } from './elements/active-filters.element';
+import { Cart } from './elements/cart.element';
 
 export class SportsPage extends BasePage {
     url = '/sports';
@@ -11,6 +12,7 @@ export class SportsPage extends BasePage {
     filter = new Filter(this.page);
     productList = new ProductList(this.page);
     activeFilters = new ActiveFilters(this.page);
+    cart = new Cart(this.page);
 
     // Tab navigation elements
     readonly onTheGoTab = this.$('#tab-on-the-go');

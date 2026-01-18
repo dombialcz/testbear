@@ -5,5 +5,3 @@ import { PageFixtures, pageFixtures } from './fixtures/page-fixtures';
 export const test = baseTest.extend<PageFixtures>({
   ...pageFixtures,
 });
-
-export { expect } from '@playwright/test';
