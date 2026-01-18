@@ -1,23 +1,22 @@
 // import test from "@playwright/test";
-import { describe } from "node:test";
 import {  expect } from '@playwright/test';
 // import expect from '../playwright.config';
 import { test } from '../fixtures';
 import AxeBuilder from "@axe-core/playwright";
 
-describe('example test', () => {
-    test.beforeEach(async ({ landingPage, }) => {
-        await landingPage.navigate();
+test.describe('example test', () => {
+    test.beforeEach(async ({ cartPage, }) => {
+        await cartPage.navigate();
     });
-    test('menubar should be accessible', async ({ menu, page }) => {
+    test('cart should be accessible', async ({ cartPage, page }) => {
 
-        // // do the axe check
-        // const accessibilityScanResults = await new AxeBuilder({ page })
-        //     .include(menu.rootSelector)
-        //     .analyze();
+        // do the axe check
+        const accessibilityScanResults = await new AxeBuilder({ page })
+            .include('.order-summary-content.cart-content')
+            .analyze();
 
-        // // expect(accessibilityScanResults.violations).toEqual([]);
-        // expect(accessibilityScanResults.violations).toEqual(['color-contrast']);
+        // expect(accessibilityScanResults.violations).toEqual([]);
+        expect(accessibilityScanResults.violations).toEqual([]);
         
     });
 });
