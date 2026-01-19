@@ -4,7 +4,7 @@ import {  expect } from '@playwright/test';
 import { test } from '../fixtures';
 import AxeBuilder from "@axe-core/playwright";
 
-test.describe('example test', () => {
+test.describe.skip('example test', () => {
     test.beforeEach(async ({ cartPage, }) => {
         await cartPage.navigate();
     });

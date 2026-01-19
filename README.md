@@ -46,9 +46,8 @@ npx playwright test --headed
 
 - `tests/` - Test specifications
 - `page-objects/` - Page Object Model implementation
+- `page-objects/elements` - Page Object Model implementation for in-page elelemnts
 - `fixtures/` - Custom Playwright fixtures
-- `utils/` - Utility functions and helpers
-- `app/` - Demo application for testing
 
 
 ## Playwright Installation Check
