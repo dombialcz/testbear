@@ -4,7 +4,7 @@ import { Locator, Page } from '@playwright/test';
  * Base Page Object
  * with helper methods
  */
-export class BasePage {
+export abstract class BasePage {
   constructor(
     readonly page: Page,
     readonly url = '',

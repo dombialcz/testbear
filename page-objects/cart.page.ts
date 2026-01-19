@@ -48,11 +48,6 @@ export class CartPage extends BasePage {
     
     readonly shippingEstimateSection = this.$('.cart-action-shipping');
 
-    // Helper methods
-
-    /**
-     * Get a cart item by product name
-     */
     getCartItemByName(productName: string): CartPageItem {
         const itemLocator = this.cartRows.filter({
             has: this.page.locator('.cart-item-link').filter({ hasText: productName })
@@ -60,39 +55,24 @@ export class CartPage extends BasePage {
         return new CartPageItem(itemLocator, this.page);
     }
 
-    /**
-     * Get cart item by index (0-based)
-     */
     getCartItemByIndex(index: number): CartPageItem {
         return new CartPageItem(this.cartRows.nth(index), this.page);
     }
 
-    /**
-     * Get the number of items in the cart
-     */
     async getCartItemCount(): Promise<number> {
         return await this.cartRows.count();
     }
 
-    /**
-     * Check if cart is empty
-     */
     async isEmpty(): Promise<boolean> {
         const count = await this.getCartItemCount();
         return count === 0;
     }
 
-    /**
-     * Get the subtotal value text
-     */
     async getSubtotal(): Promise<string> {
         const text = await this.subtotalValue.textContent();
         return text?.trim() || '';
     }
 
-    /**
-     * Get the subtotal as a numeric value
-     */
     async getSubtotalValue(): Promise<number> {
         const text = await this.getSubtotal();
         const match = text.match(/\$?(\d+\.?\d*)/);
@@ -102,57 +82,12 @@ export class CartPage extends BasePage {
         return parseFloat(match[1]);
     }
 
-    /**
-     * Get the shipping value text
-     */
-    async getShipping(): Promise<string> {
-        const text = await this.shippingValue.textContent();
-        return text?.trim() || '';
-    }
 
-    /**
-     * Get the shipping as a numeric value
-     */
-    async getShippingValue(): Promise<number> {
-        const text = await this.getShipping();
-        const match = text.match(/\$?(\d+\.?\d*)/);
-        if (!match) {
-            throw new Error(`Unable to parse shipping: ${text}`);
-        }
-        return parseFloat(match[1]);
-    }
-
-    /**
-     * Get the tax value text
-     */
-    async getTax(): Promise<string> {
-        const text = await this.taxValue.textContent();
-        return text?.trim() || '';
-    }
-
-    /**
-     * Get the tax as a numeric value
-     */
-    async getTaxValue(): Promise<number> {
-        const text = await this.getTax();
-        const match = text.match(/\$?(\d+\.?\d*)/);
-        if (!match) {
-            throw new Error(`Unable to parse tax: ${text}`);
-        }
-        return parseFloat(match[1]);
-    }
-
-    /**
-     * Get the total value text
-     */
     async getTotal(): Promise<string> {
         const text = await this.totalValue.textContent();
         return text?.trim() || '';
     }
 
-    /**
-     * Get the total as a numeric value
-     */
     async getTotalValue(): Promise<number> {
         const text = await this.getTotal();
         const match = text.match(/\$?(\d+\.?\d*)/);
@@ -161,44 +96,7 @@ export class CartPage extends BasePage {
         }
         return parseFloat(match[1]);
     }
-    /**
-     * Apply discount code
-     */
-    async applyDiscountCode(code: string): Promise<void> {
-        // Expand the section if collapsed
-        const isExpanded = await this.discountCodeSection.locator('.cart-action-body').isVisible();
-        if (!isExpanded) {
-            await this.discountCodeSection.locator('.cart-action-title').click();
-        }
-        
-        await this.discountCodeInput.fill(code);
-        await this.applyDiscountButton.click();
-    }
 
-    /**
-     * Apply gift card
-     */
-    async applyGiftCard(code: string): Promise<void> {
-        // Expand the section if collapsed
-        const isExpanded = await this.giftCardSection.locator('.cart-action-body').isVisible();
-        if (!isExpanded) {
-            await this.giftCardSection.locator('.cart-action-title').click();
-        }
-        
-        await this.giftCardInput.fill(code);
-        await this.applyGiftCardButton.click();
-    }
-
-    /**
-     * Continue shopping
-     */
-    async continueShopping(): Promise<void> {
-        await this.continueShoppingButton.click();
-    }
-
-    /**
-     * Proceed to checkout
-     */
     async proceedToCheckout(): Promise<void> {
         await this.checkoutButton.click();
         await this.page.waitForURL('**/login**');
@@ -219,9 +117,6 @@ export class CartPage extends BasePage {
     }
 }
 
-/**
- * Represents a single item row on the cart page
- */
 export class CartPageItem extends BaseElement {
 
     constructor(itemLocator: Locator, page: Page) {
@@ -247,87 +142,43 @@ export class CartPageItem extends BaseElement {
 
     // Action buttons
     readonly removeButton = this.root.locator('a[data-action="remove"]');
-    readonly moveToWishlistButton = this.root.locator('a[data-action="addfromcart"]');
 
-    // Helper methods
 
-    /**
-     * Get the product name
-     */
     async getName(): Promise<string> {
         return (await this.productName.textContent())?.trim() || '';
     }
 
-    /**
-     * Get the product description
-     */
-    async getDescription(): Promise<string> {
-        return (await this.productDescription.textContent())?.trim() || '';
-    }
-
-    /**
-     * Get the unit price text
-     */
     async getUnitPrice(): Promise<string> {
         return (await this.unitPrice.textContent())?.trim() || '';
     }
 
-    /**
-     * Get the unit price as a numeric value
-     */
-    async getUnitPriceValue(): Promise<number> {
-        const text = await this.getUnitPrice();
-        const match = text.match(/\$?(\d+\.?\d*)/);
-        if (!match) {
-            throw new Error(`Unable to parse unit price: ${text}`);
-        }
-        return parseFloat(match[1]);
-    }
-
-    /**
-     * Get the current quantity
-     */
     async getQuantity(): Promise<number> {
         const value = await this.quantityInput.inputValue();
         return parseInt(value, 10);
     }
 
-    /**
-     * Set the quantity
-     */
     async setQuantity(quantity: number): Promise<void> {
         await this.quantityInput.fill(quantity.toString());
         await this.quantityInput.blur();
     }
 
-    /**
-     * Increase quantity by clicking the + button
-     */
     async increaseQuantity(times: number = 1): Promise<void> {
         for (let i = 0; i < times; i++) {
             await this.increaseQuantityButton.click();
         }
     }
 
-    /**
-     * Decrease quantity by clicking the - button
-     */
     async decreaseQuantity(times: number = 1): Promise<void> {
         for (let i = 0; i < times; i++) {
             await this.decreaseQuantityButton.click();
         }
     }
 
-    /**
-     * Get the subtotal text (quantity * unit price)
-     */
     async getSubtotal(): Promise<string> {
         return (await this.subtotal.textContent())?.trim() || '';
     }
 
-    /**
-     * Get the subtotal as a numeric value
-     */
+
     async getSubtotalValue(): Promise<number> {
         const text = await this.getSubtotal();
         const match = text.match(/\$?(\d+\.?\d*)/);
@@ -337,24 +188,8 @@ export class CartPageItem extends BaseElement {
         return parseFloat(match[1]);
     }
 
-    /**
-     * Remove this item from the cart
-     */
     async remove(): Promise<void> {
         await this.removeButton.click();
     }
 
-    /**
-     * Move this item to the wishlist
-     */
-    async moveToWishlist(): Promise<void> {
-        await this.moveToWishlistButton.click();
-    }
-
-    /**
-     * Click on the product link to view details
-     */
-    async viewProductDetails(): Promise<void> {
-        await this.productLink.click();
-    }
 }

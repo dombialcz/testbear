@@ -7,8 +7,8 @@ import { Product } from '../page-objects/elements/product-list.element';
 test.describe('Sports section navigation tests  @nav', () => {
 
     test.describe('Navigation', () => {
-        test.beforeEach(async ({ landingPage }) => {
-            await landingPage.navigate();
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/');
         });
         
         test('should go to sports page and order basketball', async ({menu, filter, sportsPage }) => {

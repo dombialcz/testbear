@@ -199,56 +199,35 @@ export class CartItem extends BaseElement {
     readonly unitPrice = this.root.locator('.unit-price');
     
     // Action buttons
-    readonly moveToWishlistButton = this.root.locator('a[data-action="addfromcart"]');
     readonly removeButton = this.root.locator('a.remove[data-action="remove"]');
 
-    // Helper methods
-
-    /**
-     * Get the product name
-     */
     async getName(): Promise<string> {
         return (await this.productName.textContent())?.trim() || '';
     }
 
-    /**
-     * Get the current quantity
-     */
     async getQuantity(): Promise<number> {
         const value = await this.quantityInput.inputValue();
         return parseInt(value, 10);
     }
 
-    /**
-     * Set the quantity
-     */
     async setQuantity(quantity: number): Promise<void> {
         await this.quantityInput.fill(quantity.toString());
         // Trigger blur to update
         await this.quantityInput.blur();
     }
 
-    /**
-     * Increase quantity by clicking the + button
-     */
     async increaseQuantity(times: number = 1): Promise<void> {
         for (let i = 0; i < times; i++) {
             await this.increaseQuantityButton.click();
         }
     }
 
-    /**
-     * Decrease quantity by clicking the - button
-     */
     async decreaseQuantity(times: number = 1): Promise<void> {
         for (let i = 0; i < times; i++) {
             await this.decreaseQuantityButton.click();
         }
     }
 
-    /**
-     * Get the unit price text
-     */
     async getUnitPrice(): Promise<string> {
         const priceText = await this.unitPrice.textContent();
         if (!priceText) {
@@ -257,9 +236,6 @@ export class CartItem extends BaseElement {
         return priceText.trim();
     }
 
-    /**
-     * Get the unit price as a numeric value
-     */
     async getUnitPriceValue(): Promise<number> {
         const priceText = await this.getUnitPrice();
         const match = priceText.match(/\$?(\d+\.?\d*)/);
@@ -269,24 +245,8 @@ export class CartItem extends BaseElement {
         return parseFloat(match[1]);
     }
 
-    /**
-     * Remove this item from the cart
-     */
     async remove(): Promise<void> {
         await this.removeButton.click();
     }
 
-    /**
-     * Move this item to the wishlist
-     */
-    async moveToWishlist(): Promise<void> {
-        await this.moveToWishlistButton.click();
-    }
-
-    /**
-     * Click on the product to view details
-     */
-    async viewProductDetails(): Promise<void> {
-        await this.productLink.click();
-    }
 }
